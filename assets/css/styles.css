@@ -1,46 +1,77 @@
-@font-face {
-  font-family: "hack";
-  src: url("../webfonts/hack-regular-subset.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 400;
-  text-rendering: optimizeLegibility;
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-@font-face {
-  font-family: "hack";
-  src: url("../webfonts/hack-italic-subset.woff2") format("woff2");
-  font-style: italic;
-  font-weight: 400;
-  text-rendering: optimizeLegibility;
+:root {
+  --bg: #0a0c10;
+  --surface: #0f1318;
+  --border: #1e2530;
+  --text: #c9d4e0;
+  --muted: #4a5568;
+  --key: #6eb5f5;
+  --value: #9ecbff;
+  --string: #79c0ff;
+  --accent: #58a6ff;
+  --glow: rgba(88, 166, 255, 0.08);
+  --link-hover: #388bfd;
+}
+
+html {
+  height: 100%;
 }
 
 body {
-  font-family: "hack", monospace;
-  font-size: 16px;
+  font-family: 'JetBrains Mono', 'Hack', monospace;
+  font-size: 14px;
   font-weight: 400;
-  background-color: #0d1116;
-  color: #e6edf3;
+  background-color: var(--bg);
+  color: var(--text);
+  margin: 0;
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+/* subtle grid overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(88, 166, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(88, 166, 255, 0.015) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
 }
 
 main {
-  position: absolute;
-  width: 98%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
+  z-index: 1;
+  width: clamp(300px, 50%, 800px);
 }
 
-@media (min-width: 576px) {
+@media (max-width: 768px) {
   main {
-    font-size: 18px;
     width: 90%;
   }
 }
 
+@media (min-width: 576px) {
+  body {
+    font-size: 15px;
+  }
+}
+
 @media (min-width: 768px) {
-  main {
-    font-size: 20px;
-    width: 80%;
+  body {
+    font-size: 16px;
   }
 }
 
@@ -50,43 +81,172 @@ p {
 }
 
 a {
-  color: inherit;
+  color: var(--value);
+  text-decoration: none;
   font-style: italic;
+  transition: color 0.15s ease;
 }
 
 a:hover,
 a:active {
-  color: #337fbe;
+  color: var(--link-hover);
 }
 
+/* ── JSON wrapper ── */
 #json {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem 1.75rem;
   white-space: nowrap;
+  overflow-x: auto;
+  box-shadow:
+    0 0 0 1px rgba(88, 166, 255, 0.04),
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
-#json:before {
-  content: "{";
+/* thoughts block allows wrapping */
+.block--thoughts {
+  white-space: normal;
 }
 
-#json:after {
-  content: "}";
+#thoughts-line {
+  white-space: normal;
+  word-break: break-word;
+  padding-left: 1.25rem;
+  padding-top: 0.2rem;
 }
 
-.my {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+/* brace lines */
+#json::before {
+  content: '{';
+  color: var(--muted);
+  display: block;
+  margin-bottom: 0.25rem;
 }
 
-.mt {
+#json::after {
+  content: '}';
+  color: var(--muted);
+  display: block;
+  margin-top: 0.25rem;
+}
+
+/* ── sections ── */
+.block {
+  margin: 1.25rem 0;
+  padding-left: 1.5rem;
+  border-left: 2px solid var(--border);
+  transition: border-color 0.2s;
+}
+
+.block:hover {
+  border-left-color: rgba(88, 166, 255, 0.3);
+}
+
+.block-label {
+  margin-bottom: 0.5rem;
+  color: var(--muted);
+  font-size: 0.85em;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0;
+  padding: 0.2rem 0;
+  padding-left: 1.25rem;
+}
+
+.row+.row {
+  border-top: 1px solid transparent;
+}
+
+/* ── tokens ── */
+.key {
+  color: var(--key);
+}
+
+.val {
+  color: var(--value);
+}
+
+.punct {
+  color: var(--muted);
+}
+
+.tag {
+  color: #7ee787;
+  font-style: italic;
+}
+
+/* ── thoughts toggle button ── */
+.toggle-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-left: 0.6rem;
+  font-family: inherit;
+  font-size: inherit;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.toggle-btn:hover {
+  color: var(--accent);
+}
+
+/* ── typed cursor ── */
+.typed-cursor {
+  color: var(--accent);
+}
+
+/* ── hidden strings ── */
+#strings {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+/* ── 404 ── */
+.error {
+  text-align: center;
+  padding: 3rem;
+}
+
+.error h1 {
+  font-size: 4em;
+  color: var(--key);
+  margin-bottom: 0.5rem;
+}
+
+.error p {
+  color: var(--muted);
+}
+
+.error .mt {
   margin-top: 1.5rem;
 }
 
-.ms {
-  margin-left: 1.5rem;
+/* fade-in on load */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.error,
-.key,
-.value {
-  text-transform: lowercase;
-  color: #77bcfa;
+#json {
+  animation: fadeUp 0.4s ease both;
 }
