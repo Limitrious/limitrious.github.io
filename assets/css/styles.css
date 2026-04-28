@@ -20,25 +20,25 @@
   --link-hover: #388bfd;
 }
 
-html {
-  height: 100%;
+html,
+body {
+  height: 100dvh;
+  overflow: hidden;
 }
 
 body {
   font-family: 'JetBrains Mono', 'Hack', monospace;
-  font-size: 14px;
+  font-size: clamp(9px, min(1.3vw, 1.6dvh), 15px);
   font-weight: 400;
   background-color: var(--bg);
   color: var(--text);
   margin: 0;
-  min-height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem 1rem;
+  padding: 1rem;
 }
 
-/* subtle grid overlay */
 body::before {
   content: '';
   position: fixed;
@@ -59,19 +59,7 @@ main {
 
 @media (max-width: 768px) {
   main {
-    width: 90%;
-  }
-}
-
-@media (min-width: 576px) {
-  body {
-    font-size: 15px;
-  }
-}
-
-@media (min-width: 768px) {
-  body {
-    font-size: 16px;
+    width: 92%;
   }
 }
 
@@ -97,13 +85,36 @@ a:active {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 1.5rem 1.75rem;
+  padding: 1rem 1.5rem;
   white-space: nowrap;
-  overflow-x: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: calc(100dvh - 2rem);
   box-shadow:
     0 0 0 1px rgba(88, 166, 255, 0.04),
     0 8px 32px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  /* firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+/* chromium */
+#json::-webkit-scrollbar {
+  width: 3px;
+}
+
+#json::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#json::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 99px;
+}
+
+#json::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
 }
 
 /* thoughts block allows wrapping */
@@ -123,19 +134,19 @@ a:active {
   content: '{';
   color: var(--muted);
   display: block;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.1rem;
 }
 
 #json::after {
   content: '}';
   color: var(--muted);
   display: block;
-  margin-top: 0.25rem;
+  margin-top: 0.1rem;
 }
 
 /* ── sections ── */
 .block {
-  margin: 1.25rem 0;
+  margin: 0.6rem 0;
   padding-left: 1.5rem;
   border-left: 2px solid var(--border);
   transition: border-color 0.2s;
@@ -146,7 +157,7 @@ a:active {
 }
 
 .block-label {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
   color: var(--muted);
   font-size: 0.85em;
 }
@@ -154,8 +165,8 @@ a:active {
 .row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.15rem 0;
-  padding: 0.2rem 0;
+  gap: 0;
+  padding: 0.1rem 0;
   padding-left: 1.25rem;
 }
 
